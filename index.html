@@ -11,6 +11,7 @@
             --dark: #1e272e;
             --light: #f1f2f6;
             --warning: #ffa502;
+            --info: #3742fa;
         }
         * {
             box-sizing: border-box;
@@ -27,8 +28,6 @@
             align-items: center;
             padding: 10px;
         }
-
-        /* Container chung */
         .app-container {
             width: 100%;
             max-width: 480px;
@@ -38,279 +37,292 @@
             overflow: hidden;
             border: 2px solid #3f4756;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            max-height: 850px;
         }
 
-        /* MÀN HÌNH CHỜ (START SCREEN) */
+        /* MÀN HÌNH CHỜ */
         #start-screen {
-            padding: 40px 20px;
+            padding: 30px 20px;
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
+            overflow-y: auto;
+            height: 100%;
         }
-        .game-logo {
-            font-size: 50px;
-            animation: bounce 1.5s infinite alternate;
-        }
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-        #start-screen h1 {
-            color: var(--primary);
-            font-size: 26px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        #start-screen p {
-            color: #a4b0be;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        .menu-box {
-            width: 100%;
+        .game-logo { font-size: 45px; animation: bounce 1.5s infinite alternate; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+        #start-screen h1 { color: var(--primary); font-size: 24px; }
+        .menu-box { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+        
+        .input-group, .code-input-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
-        }
-        .code-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             background: #1e272e;
-            padding: 12px;
+            padding: 10px;
             border-radius: 10px;
-            border: 1px dashed #57606f;
+            border: 1px solid #57606f;
             width: 100%;
+            text-align: left;
         }
-        .code-input-group input {
+        input {
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #ced6e0;
             background: #2f3542;
             color: white;
-            font-family: monospace;
             font-size: 13px;
-            text-align: center;
         }
 
-        /* MÀN HÌNH GAME CHÍNH */
-        #game-screen {
-            display: none;
-            flex-direction: column;
-            height: 100vh;
-            max-height: 800px;
-        }
-        header {
-            background: #1e272e;
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 2px solid #3f4756;
-        }
-        header h2 { font-size: 18px; color: var(--primary); }
-        
-        /* Bảng chỉ số */
+        /* MÀN HÌNH GAME */
+        #game-screen { display: none; flex-direction: column; height: 100%; }
+        header { background: #1e272e; padding: 10px; text-align: center; border-bottom: 2px solid #3f4756; }
+        header h2 { font-size: 16px; color: var(--primary); }
+        .shop-name-display { font-size: 12px; color: var(--warning); font-weight: bold; }
+
+        /* THANH CHỈ SỐ */
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            gap: 6px;
             background: #111417;
-            padding: 10px 15px;
-            font-size: 13px;
+            padding: 8px 12px;
+            font-size: 12px;
             font-weight: bold;
             border-bottom: 1px solid #3f4756;
         }
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .stat-item { display: flex; align-items: center; gap: 4px; }
 
-        /* Nội dung game cuộn */
-        .game-body {
+        /* TABS ĐIỀU HƯỚNG */
+        .tabs {
+            display: flex;
+            background: #111417;
+            border-bottom: 2px solid #3f4756;
+        }
+        .tab-btn {
             flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .section-title {
-            font-size: 14px;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: #a4b0be;
             font-weight: bold;
-            color: var(--warning);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
         }
+        .tab-btn.active { color: var(--warning); border-bottom: 2px solid var(--warning); background: #1e272e; }
 
-        .action-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .tab-content { display: none; flex: 1; overflow-y: auto; padding: 12px; flex-direction: column; gap: 12px; }
+        .tab-content.active { display: flex; }
 
+        .section-title { font-size: 13px; font-weight: bold; color: var(--warning); margin-bottom: 5px; text-transform: uppercase; }
+        
         button {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            transition: 0.15s;
+            transition: 0.1s;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            gap: 6px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
         }
         button:active { transform: scale(0.97); }
         button.secondary { background-color: var(--secondary); color: #1e272e; }
-        button.info { background-color: #3742fa; }
+        button.info { background-color: var(--info); }
         button.warning { background-color: var(--warning); color: #1e272e; }
+        button:disabled { background: #57606f !important; color: #a4b0be !important; cursor: not-allowed; }
 
-        .shop-item, .quest-item {
+        /* KHU VỰC KHÁCH HÀNG ĐỨNG */
+        .customer-card {
+            background: #111417;
+            border: 2px dashed var(--warning);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .item-row, .shop-item, .quest-item, .rank-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #1e272e;
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-radius: 8px;
             border: 1px solid #3f4756;
-            margin-bottom: 6px;
-            font-size: 13px;
-        }
-        .shop-item button {
-            padding: 6px 12px;
             font-size: 12px;
+            margin-bottom: 5px;
         }
+        .item-row button, .shop-item button { padding: 5px 10px; font-size: 11px; }
 
         .log-box {
             background: #111417;
             color: var(--secondary);
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
-            height: 100px;
+            height: 110px;
             overflow-y: auto;
             font-family: monospace;
-            font-size: 12px;
+            font-size: 11px;
             border: 1px solid #3f4756;
         }
 
-        /* Khu vực mã code trong game */
         .code-game-area {
             background: #1e272e;
-            padding: 12px 15px;
+            padding: 10px;
             border-top: 2px solid #3f4756;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
-        .code-game-area input {
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #3f4756;
-            background: #111417;
-            color: white;
-            font-family: monospace;
-            font-size: 12px;
-        }
-        .code-row {
-            display: flex;
-            gap: 8px;
-        }
-        .code-row button {
-            flex: 1;
-            padding: 8px;
-            font-size: 12px;
-        }
+        .code-game-area input { font-size: 11px; padding: 6px; font-family: monospace; }
+        .code-row { display: flex; gap: 6px; }
+        .code-row button { flex: 1; padding: 6px; font-size: 11px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
-    <!-- MÀN HÌNH MỞ ĐẦU (START SCREEN) -->
+    <!-- MÀN HÌNH MỞ ĐẦU -->
     <div id="start-screen">
         <div class="game-logo">🍢</div>
         <h1>Bán Xiên Bẩn Trả Nợ</h1>
-        <p>Kiếm tiền lướt phố, trả nợ vay nặng lãi và tránh bị công an đuổi bắt. Liệu bạn có vươn lên thành đại gia phố ẩm thực?</p>
+        <p style="font-size: 13px; color: #a4b0be;">Trở thành ông vua vỉa hè, chế biến xiên bẩn, phục vụ thực khách khó tính và trả hết khoản nợ khổng lồ!</p>
         
         <div class="menu-box">
-            <button class="secondary" onclick="startNewGame()" style="font-size: 16px; padding: 14px;">🎮 Bắt Đầu Trò Chơi Mới</button>
+            <div class="input-group">
+                <span style="font-size: 12px; font-weight: bold; color: var(--warning);">Nhập tên tiệm xiên bẩn của bạn:</span>
+                <input type="text" id="inputShopName" placeholder="Ví dụ: Tiệm Xiên Bẩn Chú Tư..." />
+            </div>
+            <button class="secondary" onclick="startNewGame()" style="font-size: 15px; padding: 12px;">🎮 Bắt Đầu Hành Trình</button>
             
-            <div class="code-input-group">
-                <span style="font-size: 12px; color: #ced6e0; font-weight: bold;">Hoặc tiếp tục hành trình cũ:</span>
-                <input type="text" id="loadCodeInput" placeholder="Dán mã lưu game vào đây..." />
+            <div class="code-input-group" style="margin-top: 10px;">
+                <span style="font-size: 11px; color: #ced6e0; font-weight: bold;">Hoặc nhập mã lưu game cũ:</span>
+                <input type="text" id="loadCodeInput" placeholder="Dán mã code vào đây..." />
                 <button class="info" onclick="loadGameCode()">📥 Nhập Mã Chơi Tiếp</button>
             </div>
         </div>
     </div>
 
-    <!-- MÀN HÌNH GAME CHÍNH (GAME SCREEN) -->
+    <!-- MÀN HÌNH GAME CHÍNH -->
     <div id="game-screen">
         <header>
-            <h2>🍢 Bán Xiên Bẩn Trả Nợ 🍢</h2>
+            <h2 id="headerTitle">🍢 Bán Xiên Bẩn Trả Nợ</h2>
+            <div class="shop-name-display" id="displayShopName">Chưa đặt tên</div>
         </header>
 
+        <!-- THANH CHỈ SỐ -->
         <div class="stats-bar">
-            <div class="stat-item">💵 Tiền: <span id="money" style="color:var(--secondary)">500</span> VNĐ</div>
-            <div class="stat-item">💸 Nợ: <span id="debt" style="color:var(--primary)">5000</span> VNĐ</div>
-            <div class="stat-item">🍢 Xiên: <span id="skewers">5</span></div>
-            <div class="stat-item">⏳ Ngày: <span id="day" style="color:var(--warning)">1</span></div>
+            <div class="stat-item">💵 Tiền: <span id="money" style="color:var(--secondary)">500</span>đ</div>
+            <div class="stat-item">💸 Nợ: <span id="debt" style="color:var(--primary)">5000</span>đ</div>
+            <div class="stat-item">⭐ Uy tín: <span id="reputation" style="color:var(--warning)">10</span></div>
+            <div class="stat-item">🏆 Cấp Tiệm: <span id="shopLevel" style="color:var(--info)">1</span> (XP: <span id="exp">0</span>/<span id="maxExp">100</span>)</div>
         </div>
 
-        <div class="game-body">
-            <!-- Hành động -->
-            <div>
-                <div class="section-title">Hành Động Kinh Doanh</div>
-                <div class="action-grid">
-                    <button onclick="makeSkewers()">🥩 Làm xiên bẩn (Tốn 1 nguyên liệu)</button>
-                    <button class="secondary" onclick="sellSkewers()">🛒 Mời khách mua xiên bẩn</button>
-                    <button class="warning" onclick="payDebt()">💸 Trả nợ (1000 VNĐ)</button>
+        <!-- THANH TAB CHUYỂN ĐỔI -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-kitchen', this)">🍳 Quầy & Bán</button>
+            <button class="tab-btn" onclick="switchTab('tab-shop', this)">🛒 Chợ Mua</button>
+            <button class="tab-btn" onclick="switchTab('tab-quests', this)">📜 Nhiệm Vụ</button>
+            <button class="tab-btn" onclick="switchTab('tab-rank', this)">🏆 Xếp Hạng</button>
+        </div>
+
+        <!-- TAB 1: QUẦY & BÁN HÀNG (TỰ ĐỘNG KHÁCH) -->
+        <div id="tab-kitchen" class="tab-content active">
+            <!-- Khách hàng đang ghé -->
+            <div class="customer-card" id="customerCard">
+                <div style="font-weight: bold; color: var(--warning); margin-bottom: 4px;" id="custName">👤 Khách đang tới...</div>
+                <div style="font-size: 13px; font-style: italic; margin-bottom: 8px;" id="custRequest">"Chờ khách gọi món..."</div>
+                <div id="custActionArea">
+                    <button class="secondary" id="serveBtn" onclick="serveCustomer()" disabled>Phục vụ món</button>
                 </div>
             </div>
 
-            <!-- Cửa hàng -->
             <div>
-                <div class="section-title">Chợ Nguyên Liệu & Nâng Cấp</div>
-                <div class="shop-item">
-                    <span>Thịt "bí ẩn" (x5) - 100 VNĐ</span>
-                    <button onclick="buyMaterial(5, 100)">Mua</button>
+                <div class="section-title">Kho Nguyên Liệu Thô</div>
+                <div class="item-row">
+                    <span>🥩 Thịt Heo/Bò (Kho: <span id="matMeat">5</span>)</span>
+                    <button class="warning" onclick="craftItem('meat')">Chế biến</button>
                 </div>
-                <div class="shop-item">
-                    <span>Nâng cấp xe đẩy (<span id="cartLvlText">Cấp 1</span>)</span>
-                    <button class="secondary" onclick="upgradeCart()">Nâng cấp</button>
+                <div class="item-row">
+                    <span>🦐 Hải sản/Viên (Kho: <span id="matSeafood">5</span>)</span>
+                    <button class="warning" onclick="craftItem('seafood')">Chế biến</button>
                 </div>
             </div>
 
-            <!-- Nhiệm vụ -->
             <div>
-                <div class="section-title">Nhiệm Vụ Hằng Ngày</div>
-                <div class="quest-item" id="questStatus">
-                    <span>Đang tải nhiệm vụ...</span>
-                </div>
+                <div class="section-title">Kho Món Ăn Sẵn Sàng</div>
+                <div id="foodListContainer"></div>
             </div>
 
-            <!-- Nhật ký -->
             <div>
                 <div class="section-title">Nhật Ký Phố Đêm</div>
-                <div class="log-box" id="logBox">
-                    Chào mừng bạn đến với vỉa hè...<br>
-                </div>
+                <div class="log-box" id="logBox"></div>
             </div>
         </div>
 
-        <!-- Lưu code trong game -->
+        <!-- TAB 2: CHỢ NGUYÊN LIỆU & NÂNG CẤP -->
+        <div id="tab-shop" class="tab-content">
+            <div class="section-title">Chợ Mua Nguyên Liệu</div>
+            <div class="shop-item">
+                <span>Thịt Thô (x5) - Giá: 80đ</span>
+                <button onclick="buyMaterial('meat', 5, 80)">Mua</button>
+            </div>
+            <div class="shop-item">
+                <span>Hải Sản/Đồ Viên Thô (x5) - Giá: 100đ</span>
+                <button onclick="buyMaterial('seafood', 5, 100)">Mua</button>
+            </div>
+
+            <div class="section-title" style="margin-top: 10px;">Mở Khóa Món Ăn Bằng Uy Tín</div>
+            <div id="unlockShopContainer"></div>
+
+            <div class="section-title" style="margin-top: 10px;">Tài Chính & Trả Nợ</div>
+            <div class="shop-item">
+                <span>Trả nợ ngân hàng đen (1,000đ)</span>
+                <button class="warning" onclick="payDebt()">Trả nợ</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: NHIỆM VỤ -->
+        <div id="tab-content" class="tab-content"></div>
+        <div id="tab-quests" class="tab-content">
+            <div class="section-title">Nhiệm Vụ Chính Tuyến</div>
+            <div class="quest-item" id="mainQuestContainer">
+                <span>Đang tải nhiệm vụ chính tuyến...</span>
+            </div>
+
+            <div class="section-title" style="margin-top: 10px;">Nhiệm Vụ Hằng Ngày</div>
+            <div class="quest-item" id="dailyQuestContainer">
+                <span>Đang tải nhiệm vụ ngày...</span>
+            </div>
+        </div>
+
+        <!-- TAB 4: BẢNG XẾP HẠNG -->
+        <div id="tab-rank" class="tab-content">
+            <div class="section-title">Bảng Xếp Hạng Tiệm Xiên Bẩn Toàn Thành Phố</div>
+            <div id="leaderboardList"></div>
+        </div>
+
+        <!-- KHU VỰC MÃ CODE LƯU GAME -->
         <div class="code-game-area">
-            <input type="text" id="saveCodeInput" readonly placeholder="Mã lưu game của bạn sẽ hiện ở đây..." />
+            <input type="text" id="saveCodeInput" readonly placeholder="Mã lưu game của bạn..." />
             <div class="code-row">
                 <button class="info" onclick="generateSaveCode()">📋 Tạo Mã Lưu</button>
-                <button class="warning" onclick="backToMenu()">🏠 Về Menu</button>
+                <button class="warning" onclick="backToMenu()">🏠 Thoát Menu</button>
             </div>
         </div>
     </div>
@@ -318,154 +330,351 @@
 </div>
 
 <script>
-    let game = {
-        money: 500,
-        debt: 5000,
-        materials: 10,
-        skewers: 5,
-        day: 1,
-        soldToday: 0,
-        cartLevel: 1,
-        questCompleted: false
+    // Dữ liệu cấu hình món ăn và thực phẩm
+    const FOOD_DB = {
+        meatSkewers: { name: "Xiên Thịt Nướng", mat: "meat", matReq: 1, price: 60, unlocked: true, minRep: 0 },
+        spicyBalls: { name: "Đồ Viên Sốt Cay", mat: "meat", matReq: 2, price: 140, unlocked: false, minRep: 25 },
+        grilledSquid: { name: "Xiên Bạch Tuộc Mini", mat: "seafood", matReq: 2, price: 180, unlocked: false, minRep: 50 },
+        specialCombo: { name: "Combo Xiên Siêu Bẩn Đặc Biệt", mat: "seafood", matReq: 4, price: 350, unlocked: false, minRep: 100 }
     };
 
-    function updateUI() {
-        document.getElementById('money').innerText = game.money;
-        document.getElementById('debt').innerText = game.debt;
-        document.getElementById('skewers').innerText = game.skewers;
-        document.getElementById('day').innerText = game.day;
-        document.getElementById('cartLvlText').innerText = `Cấp ${game.cartLevel}`;
-        
-        let qText = game.questCompleted ? "✅ Đã hoàn thành nhiệm vụ!" : `Bán xiên (${game.soldToday}/10) - Thưởng 300 VNĐ`;
-        document.getElementById('questStatus').querySelector('span').innerText = qText;
+    const NPC_NAMES = ["Học sinh cấp 3", "Anh xe ôm công nghệ", "Chị hàng xóm", "Thanh niên xăm trổ", "Khách du lịch", "Cán bộ phường đi tuần ẩn danh"];
+    const CUSTOMER_PHRASES = [
+        "Đói quá! Cho một phần {food} nhanh lên chủ quán ơi!",
+        "Làm cho tôi cây {food} thật cay nhé!",
+        "Nghe nói quán này xiên bẩn ngon lắm, cho tôi 1 phần {food}.",
+        "Cho mình một {food} vừa đi vừa ăn nào!"
+    ];
+
+    const LEADERBOARD_BOTS = [
+        { name: "Tiệm Xiên Bẩn Đại Cồ Việt", level: 12 },
+        { name: "Xiên Bẩn 24h - Cẩm Tú", level: 9 },
+        { name: "Vỉa Hè Chị Hai", level: 7 },
+        { name: "Bếp Đêm Của Tuấn", level: 5 },
+        { name: "Xiên Sạch 99%", level: 3 }
+    ];
+
+    let game = {
+        shopName: "Tiệm Xiên Bẩn Vỉa Hè",
+        money: 500,
+        debt: 5000,
+        reputation: 15,
+        level: 1,
+        exp: 0,
+        maxExp: 100,
+        materials: { meat: 8, seafood: 5 },
+        foods: { meatSkewers: 3, spicyBalls: 0, grilledSquid: 0, specialCombo: 0 },
+        unlocked: { meatSkewers: true, spicyBalls: false, grilledSquid: false, specialCombo: false },
+        quests: {
+            mainStep: 1,
+            mainGoal: 3000, // Trả nợ xuống dưới 3000 hoặc đạt cấp 3
+            dailySold: 0,
+            dailyTarget: 8,
+            dailyCompleted: false
+        }
+    };
+
+    let currentCustomer = null;
+    let customerTimer = null;
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+        if(tabId === 'tab-rank') renderLeaderboard();
+        if(tabId === 'tab-shop') renderUnlockShop();
+        if(tabId === 'tab-quests') renderQuests();
     }
 
-    function log(message) {
+    function log(msg) {
         const logBox = document.getElementById('logBox');
-        logBox.innerHTML += `> ${message}<br>`;
+        if(!logBox) return;
+        logBox.innerHTML += `> ${msg}<br>`;
         logBox.scrollTop = logBox.scrollHeight;
     }
 
     function startNewGame() {
+        let nameInput = document.getElementById('inputShopName').value.trim();
+        if(!nameInput) {
+            alert("Vui lòng đặt tên cho tiệm xiên bẩn của bạn trước!");
+            return;
+        }
+        game.shopName = nameInput;
+        document.getElementById('displayShopName').innerText = game.shopName;
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
-        log("Bắt đầu ngày kinh doanh mới trên vỉa hè!");
+        
+        log(`Khai trương ${game.shopName}! Bắt đầu sự nghiệp trả nợ.`);
         updateUI();
+        startCustomerSpawner();
     }
 
-    function backToMenu() {
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('start-screen').style.display = 'flex';
+    function updateUI() {
+        document.getElementById('money').innerText = game.money;
+        document.getElementById('debt').innerText = game.debt;
+        document.getElementById('reputation').innerText = game.reputation;
+        document.getElementById('shopLevel').innerText = game.level;
+        document.getElementById('exp').innerText = game.exp;
+        document.getElementById('maxExp').innerText = game.maxExp;
+
+        document.getElementById('matMeat').innerText = game.materials.meat;
+        document.getElementById('matSeafood').innerText = game.materials.seafood;
+
+        renderFoodList();
     }
 
-    function makeSkewers() {
-        if (game.materials > 0) {
-            game.materials--;
-            game.skewers += 2;
-            log(`Chế biến thành công 2 xiên bẩn. Còn ${game.materials} nguyên liệu.`);
+    // Hiển thị kho món ăn sẵn có
+    function renderFoodList() {
+        let container = document.getElementById('foodListContainer');
+        container.innerHTML = '';
+        for (let key in FOOD_DB) {
+            if (!game.unlocked[key]) continue;
+            let item = FOOD_DB[key];
+            container.innerHTML += `
+                <div class="item-row">
+                    <span>${item.name}: <b>${game.foods[key]}</b> cái</span>
+                    <span style="font-size:11px; color:var(--warning)">Bán: ${item.price}đ</span>
+                </div>
+            `;
+        }
+    }
+
+    // Chế biến thực phẩm thô thành món ăn
+    function craftItem(matType) {
+        let matchedKeys = Object.keys(FOOD_DB).filter(k => FOOD_DB[k].mat === matType && game.unlocked[k]);
+        if(matchedKeys.length === 0) return;
+        
+        // Chọn món đầu tiên hoặc cho phép chọn ngẫu nhiên/cơ bản
+        let foodKey = matchedKeys[0]; 
+        // Ưu tiên món cao cấp nếu đủ nguyên liệu
+        for(let k of matchedKeys) {
+            if(game.materials[matType] >= FOOD_DB[k].matReq) foodKey = k;
+        }
+
+        let req = FOOD_DB[foodKey].matReq;
+        if(game.materials[matType] >= req) {
+            game.materials[matType] -= req;
+            game.foods[foodKey]++;
+            log(`Chế biến thành công 1 ${FOOD_DB[foodKey].name}!`);
         } else {
-            log(`Hết nguyên liệu! Hãy ra chợ mua thêm.`);
+            log(`Không đủ nguyên liệu thô để làm món này!`);
         }
         updateUI();
+        if(currentCustomer) checkServeAvailability();
     }
 
-    function sellSkewers() {
-        if (game.skewers > 0) {
-            game.skewers--;
-            let earnPrice = 50 * game.cartLevel;
-            game.money += earnPrice;
-            game.soldToday++;
-            log(`Bán 1 xiên bẩn, thu về ${earnPrice} VNĐ.`);
-
-            if (game.soldToday >= 10 && !game.questCompleted) {
-                game.questCompleted = true;
-                game.money += 300;
-                log(`🎉 Hoàn thành nhiệm vụ ngày! Thưởng 300 VNĐ.`);
-            }
-            
-            if(game.soldToday % 15 === 0) {
-                game.day++;
-                game.questCompleted = false;
-                log(`🌅 Chào ngày mới! Ngày thứ ${game.day}`);
-            }
-        } else {
-            log(`Hết xiên bẩn để bán! Hãy làm thêm.`);
-        }
-        updateUI();
-    }
-
-    function buyMaterial(amount, cost) {
-        if (game.money >= cost) {
+    // Mua nguyên liệu ở chợ
+    function buyMaterial(type, amount, cost) {
+        if(game.money >= cost) {
             game.money -= cost;
-            game.materials += amount;
-            log(`Đã mua ${amount} nguyên liệu (${cost} VNĐ).`);
+            game.materials[type] += amount;
+            log(`Đã mua ${amount} nguyên liệu thô với giá ${cost}đ.`);
+            updateUI();
         } else {
             log(`Không đủ tiền mua nguyên liệu!`);
         }
+    }
+
+    // TỰ ĐỘNG SPAWN KHÁCH HÀNG
+    function startCustomerSpawner() {
+        if(customerTimer) clearInterval(customerTimer);
+        customerTimer = setInterval(() => {
+            if(!currentCustomer) {
+                generateCustomer();
+            }
+        }, 5000); // Mỗi 5 giây có cơ hội xuất hiện khách mới
+    }
+
+    function generateCustomer() {
+        // Chọn ngẫu nhiên một món đã mở khóa mà người chơi đang có sẵn (hoặc bất kỳ)
+        let unlockedKeys = Object.keys(FOOD_DB).filter(k => game.unlocked[k]);
+        let randomFoodKey = unlockedKeys[Math.floor(Math.random() * unlockedKeys.length)];
+        
+        currentCustomer = {
+            name: NPC_NAMES[Math.floor(Math.random() * NPC_NAMES.length)],
+            wantFood: randomFoodKey,
+            phrase: CUSTOMER_PHRASES[Math.floor(Math.random() * CUSTOMER_PHRASES.length)].replace("{food}", FOOD_DB[randomFoodKey].name)
+        };
+
+        document.getElementById('custName').innerText = `👤 ${currentCustomer.name}`;
+        document.getElementById('custRequest').innerText = `"${currentCustomer.phrase}"`;
+        checkServeAvailability();
+    }
+
+    function checkServeAvailability() {
+        if(!currentCustomer) return;
+        let btn = document.getElementById('serveBtn');
+        let foodKey = currentCustomer.wantFood;
+        if(game.foods[foodKey] > 0) {
+            btn.disabled = false;
+            btn.innerText = `Phục vụ ${FOOD_DB[foodKey].name} (Có sẵn: ${game.foods[foodKey]})`;
+        } else {
+            btn.disabled = true;
+            btn.innerText = `Thiếu món ${FOOD_DB[foodKey].name} (Hãy chế biến!)`;
+        }
+    }
+
+    // Phục vụ khách hàng
+    function serveCustomer() {
+        if(!currentCustomer) return;
+        let foodKey = currentCustomer.wantFood;
+        if(game.foods[foodKey] <= 0) return;
+
+        game.foods[foodKey]--;
+        
+        // Tính toán sự kiện: Khách khen, chê hoặc quỵt tiền
+        let rand = Math.random();
+        let foodItem = FOOD_DB[foodKey];
+
+        if(rand < 0.10 && game.reputation > 5) {
+            // 10% tỷ lệ khách quỵt tiền
+            log(`❌ ${currentCustomer.name} ăn xong rồi quỵt tiền chạy mất! Mất trắng món ăn.`);
+            game.reputation -= 3;
+        } else if(rand < 0.25) {
+            // 15% tỷ lệ khách chê không ngon
+            log(`😡 ${currentCustomer.name} chê đồ ăn không hợp khẩu vị và bỏ đi! Trừ 2 uy tín.`);
+            game.reputation = Math.max(0, game.reputation - 2);
+        } else {
+            // Khách hài lòng khen ngon
+            let tip = foodItem.price;
+            game.money += tip;
+            game.reputation += 2;
+            game.exp += 25;
+            log(`⭐ ${currentCustomer.name} khen ngon! Thu về ${tip}đ, +2 uy tín, +25 XP.`);
+
+            // Cập nhật nhiệm vụ ngày
+            game.quests.dailySold++;
+            if(game.quests.dailySold >= game.quests.dailyTarget && !game.quests.dailyCompleted) {
+                game.quests.dailyCompleted = true;
+                game.money += 400;
+                log(`🎉 Hoàn thành nhiệm vụ ngày! Thưởng 400đ.`);
+            }
+
+            // Kiểm tra lên cấp tiệm
+            if(game.exp >= game.maxExp) {
+                game.level++;
+                game.exp = 0;
+                game.maxExp += 50;
+                log(`🎊 Chúc mừng! Tiệm xiên bẩn đã lên Cấp độ ${game.level}!`);
+            }
+        }
+
+        currentCustomer = null;
+        document.getElementById('custName').innerText = "👤 Đang đợi khách tiếp theo...";
+        document.getElementById('custRequest').innerText = `"Quán đông khách ghê..."`;
+        document.getElementById('serveBtn').disabled = true;
+        document.getElementById('serveBtn').innerText = "Đang đợi khách...";
+
         updateUI();
     }
 
+    // Mở khóa món ăn bằng uy tín
+    function renderUnlockShop() {
+        let container = document.getElementById('unlockShopContainer');
+        container.innerHTML = '';
+        for(let key in FOOD_DB) {
+            let item = FOOD_DB[key];
+            if(game.unlocked[key]) {
+                container.innerHTML += `<div class="shop-item"><span>${item.name}</span><span style="color:var(--secondary)">Đã mở khóa ✅</span></div>`;
+            } else {
+                let canUnlock = game.reputation >= item.minRep;
+                container.innerHTML += `
+                    <div class="shop-item">
+                        <span>${item.name} (Cần ${item.minRep} Uy Tín)</span>
+                        <button class="${canUnlock ? 'secondary' : ''}" ${canUnlock ? '' : 'disabled'} onclick="unlockFood('${key}')">Mở khóa</button>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function unlockFood(key) {
+        let item = FOOD_DB[key];
+        if(game.reputation >= item.minRep && !game.unlocked[key]) {
+            game.unlocked[key] = true;
+            log(`✨ Mở khóa thành công món mới: ${item.name}!`);
+            renderUnlockShop();
+            updateUI();
+        }
+    }
+
+    // Nhiệm vụ
+    function renderQuests() {
+        document.getElementById('mainQuestContainer').innerHTML = `<span>Mục tiêu: Trả nợ giảm mức nợ hoặc phát triển tiệm lên Cấp 3. (Hiện tại Nợ: ${game.debt}đ)</span>`;
+        let d = game.quests;
+        let dText = d.dailyCompleted ? "✅ Đã hoàn thành nhiệm vụ ngày!" : `Bán thành công (${d.dailySold}/${d.dailyTarget}) món - Thưởng 400đ`;
+        document.getElementById('dailyQuestContainer').innerHTML = `<span>${dText}</span>`;
+    }
+
+    // Bảng xếp hạng
+    function renderLeaderboard() {
+        let list = document.getElementById('leaderboardList');
+        let allRanks = [...LEADERBOARD_BOTS, { name: game.shopName + " (Bạn)", level: game.level }];
+        allRanks.sort((a, b) => b.level - a.level);
+
+        list.innerHTML = '';
+        allRanks.forEach((r, idx) => {
+            let isUser = r.name.includes("(Bạn)");
+            list.innerHTML += `
+                <div class="rank-item" style="${isUser ? 'border-color: var(--warning); background: #2f3640;' : ''}">
+                    <span><b>#${idx + 1}</b> ${r.name}</span>
+                    <span style="color: var(--warning)">Cấp ${r.level}</span>
+                </div>
+            `;
+        });
+    }
+
+    // Trả nợ
     function payDebt() {
-        let payAmount = 1000;
-        if (game.money >= payAmount) {
-            if (game.debt > 0) {
-                game.money -= payAmount;
-                game.debt = Math.max(0, game.debt - payAmount);
-                log(`Đã trả bớt ${payAmount} VNĐ tiền nợ. Nợ còn: ${game.debt} VNĐ.`);
+        let amount = 1000;
+        if(game.money >= amount) {
+            if(game.debt > 0) {
+                game.money -= amount;
+                game.debt = Math.max(0, game.debt - amount);
+                log(`Đã trả bớt ${amount}đ tiền nợ. Nợ còn: ${game.debt}đ.`);
                 if(game.debt === 0) {
-                    alert("CHÚC MỪNG! Bạn đã trả hết nợ và trở thành đại gia xiên bẩn!");
+                    alert("CHÚC MỪNG! Bạn đã trả sạch nợ và trở thành ông trùm xiên bẩn khét tiếng!");
                 }
             } else {
-                log(`Bạn đã trả sạch nợ rồi!`);
+                log(`Bạn đã sạch nợ từ lâu rồi!`);
             }
         } else {
-            log(`Không đủ tiền trả nợ!`);
+            log(`Không đủ tiền để trả nợ!`);
         }
         updateUI();
     }
 
-    function upgradeCart() {
-        let cost = 500 * game.cartLevel;
-        if (game.money >= cost) {
-            game.money -= cost;
-            game.cartLevel++;
-            log(`Nâng cấp xe đẩy lên cấp ${game.cartLevel}!`);
-        } else {
-            log(`Cần ${cost} VNĐ để nâng cấp xe đẩy!`);
-        }
-        updateUI();
-    }
-
+    // Lưu / Tải mã code
     function generateSaveCode() {
-        let jsonString = JSON.stringify(game);
-        let encodedCode = btoa(encodeURIComponent(jsonString));
-        document.getElementById('saveCodeInput').value = encodedCode;
+        let code = btoa(encodeURIComponent(JSON.stringify(game)));
+        document.getElementById('saveCodeInput').value = code;
         log(`Đã tạo mã lưu game thành công!`);
     }
 
     function loadGameCode() {
-        let inputCode = document.getElementById('loadCodeInput').value.trim();
-        if (!inputCode) {
-            alert("Vui lòng nhập mã code vào ô trống!");
-            return;
-        }
-
+        let code = document.getElementById('loadCodeInput').value.trim();
+        if(!code) { alert("Vui lòng nhập mã code!"); return; }
         try {
-            let jsonString = decodeURIComponent(atob(inputCode));
-            let loadedData = JSON.parse(jsonString);
-
-            if (loadedData && typeof loadedData.money === 'number' && typeof loadedData.debt === 'number') {
-                game = loadedData;
+            let data = JSON.parse(decodeURIComponent(atob(code)));
+            if(data && data.shopName) {
+                game = data;
                 document.getElementById('start-screen').style.display = 'none';
                 document.getElementById('game-screen').style.display = 'flex';
+                document.getElementById('displayShopName').innerText = game.shopName;
                 updateUI();
-                log(`Tải game thành công từ mã code!`);
-            } else {
-                throw new Error("Invalid data");
-            }
-        } catch (error) {
-            alert("Mã code không hợp lệ! Vui lòng kiểm tra lại.");
+                startCustomerSpawner();
+                log(`Tải game thành công! Chào mừng trở lại ${game.shopName}.`);
+            } else { throw new Error(); }
+        } catch(e) {
+            alert("Mã code không hợp lệ!");
         }
+    }
+
+    function backToMenu() {
+        if(customerTimer) clearInterval(customerTimer);
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'flex';
     }
 </script>
 
