@@ -6,173 +6,318 @@
     <title>Bán Xiên Bẩn Trả Nợ</title>
     <style>
         :root {
-            --primary-color: #ff4757;
-            --secondary-color: #2ed573;
-            --dark-color: #2f3542;
-            --light-color: #f1f2f6;
+            --primary: #ff4757;
+            --secondary: #2ed573;
+            --dark: #1e272e;
+            --light: #f1f2f6;
+            --warning: #ffa502;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #70a1ff;
-            color: var(--dark-color);
-            margin: 0;
-            padding: 20px;
+            background: linear-gradient(135deg, #1e272e, #2f3542);
+            color: #f1f2f6;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            padding: 10px;
         }
-        .game-container {
+
+        /* Container chung */
+        .app-container {
             width: 100%;
-            max-width: 900px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            max-width: 480px;
+            background: #2f3542;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             overflow: hidden;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto 1fr auto;
-            gap: 0;
+            border: 2px solid #3f4756;
+            position: relative;
         }
-        header {
-            grid-column: 1 / -1;
-            background: var(--dark-color);
+
+        /* MÀN HÌNH CHỜ (START SCREEN) */
+        #start-screen {
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        .game-logo {
+            font-size: 50px;
+            animation: bounce 1.5s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+        #start-screen h1 {
+            color: var(--primary);
+            font-size: 26px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        #start-screen p {
+            color: #a4b0be;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .menu-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .code-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #1e272e;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px dashed #57606f;
+            width: 100%;
+        }
+        .code-input-group input {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ced6e0;
+            background: #2f3542;
             color: white;
-            padding: 15px 20px;
+            font-family: monospace;
+            font-size: 13px;
             text-align: center;
         }
-        header h1 { margin: 0; font-size: 24px; color: #ff6b81; }
-        .stats-bar {
-            grid-column: 1 / -1;
-            background: #dfe4ea;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-around;
-            font-weight: bold;
-            border-bottom: 2px solid #ced6e0;
+
+        /* MÀN HÌNH GAME CHÍNH */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            max-height: 800px;
         }
-        .panel {
-            padding: 20px;
+        header {
+            background: #1e272e;
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 2px solid #3f4756;
+        }
+        header h2 { font-size: 18px; color: var(--primary); }
+        
+        /* Bảng chỉ số */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            background: #111417;
+            padding: 10px 15px;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #3f4756;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Nội dung game cuộn */
+        .game-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-        .left-panel { border-right: 2px solid #f1f2f6; }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         button {
-            background-color: var(--primary-color);
+            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
-            transition: 0.2s;
-        }
-        button:hover { opacity: 0.85; transform: translateY(-1px); }
-        button:active { transform: translateY(0); }
-        button.secondary { background-color: var(--secondary-color); }
-        button.info { background-color: #3742fa; }
-        .log-box {
-            background: #2f3542;
-            color: #2ed573;
-            padding: 10px;
-            border-radius: 6px;
-            height: 120px;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 13px;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            margin-bottom: 5px;
-        }
-        .code-area {
-            grid-column: 1 / -1;
-            background: #f1f2f6;
-            padding: 15px 20px;
+            transition: 0.15s;
             display: flex;
-            gap: 10px;
+            justify-content: center;
             align-items: center;
-            border-top: 2px solid #ced6e0;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .code-area input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ced6e0;
-            border-radius: 4px;
-            font-family: monospace;
-        }
+        button:active { transform: scale(0.97); }
+        button.secondary { background-color: var(--secondary); color: #1e272e; }
+        button.info { background-color: #3742fa; }
+        button.warning { background-color: var(--warning); color: #1e272e; }
+
         .shop-item, .quest-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f8f9fa;
-            padding: 8px 12px;
+            background: #1e272e;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #3f4756;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .shop-item button {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .log-box {
+            background: #111417;
+            color: var(--secondary);
+            padding: 10px;
+            border-radius: 8px;
+            height: 100px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #3f4756;
+        }
+
+        /* Khu vực mã code trong game */
+        .code-game-area {
+            background: #1e272e;
+            padding: 12px 15px;
+            border-top: 2px solid #3f4756;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .code-game-area input {
+            padding: 8px;
             border-radius: 6px;
-            border: 1px solid #dcdde1;
-            margin-bottom: 8px;
-            font-size: 14px;
+            border: 1px solid #3f4756;
+            background: #111417;
+            color: white;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .code-row {
+            display: flex;
+            gap: 8px;
+        }
+        .code-row button {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <header>
-        <h1>🍢 Bán Xiên Bẩn Trả Nợ 🍢</h1>
-        <p>Kiếm tiền, trả nợ vay nặng lãi và đừng để bị cảnh sát đuổi!</p>
-    </header>
-
-    <div class="stats-bar">
-        <div>💵 Tiền: <span id="money">500</span> VNĐ</div>
-        <div>💸 Nợ: <span id="debt">5000</span> VNĐ</div>
-        <div>🍢 Xiên sẵn: <span id="skewers">5</span></div>
-        <div>⏳ Ngày: <span id="day">1</span></div>
-    </div>
-
-    <!-- Bảng Điều Khiển & Hành Động -->
-    <div class="panel left-panel">
-        <div class="section-title">Hành Động Kinh Doanh</div>
-        <button onclick="makeSkewers()">Làm xiên bẩn (Tốn 1 nguyên liệu)</button>
-        <button class="secondary" onclick="sellSkewers()">Mời khách mua xiên bẩn</button>
-        <button class="info" onclick="payDebt()">Trả nợ (1000 VNĐ)</button>
-
-        <div class="section-title">Nhật ký hoạt động</div>
-        <div class="log-box" id="logBox">
-            Chào mừng bạn đến với phố ẩm thực đường phố! Hãy bắt đầu làm và bán xiên bẩn nào...<br>
+<div class="app-container">
+    
+    <!-- MÀN HÌNH MỞ ĐẦU (START SCREEN) -->
+    <div id="start-screen">
+        <div class="game-logo">🍢</div>
+        <h1>Bán Xiên Bẩn Trả Nợ</h1>
+        <p>Kiếm tiền lướt phố, trả nợ vay nặng lãi và tránh bị công an đuổi bắt. Liệu bạn có vươn lên thành đại gia phố ẩm thực?</p>
+        
+        <div class="menu-box">
+            <button class="secondary" onclick="startNewGame()" style="font-size: 16px; padding: 14px;">🎮 Bắt Đầu Trò Chơi Mới</button>
+            
+            <div class="code-input-group">
+                <span style="font-size: 12px; color: #ced6e0; font-weight: bold;">Hoặc tiếp tục hành trình cũ:</span>
+                <input type="text" id="loadCodeInput" placeholder="Dán mã lưu game vào đây..." />
+                <button class="info" onclick="loadGameCode()">📥 Nhập Mã Chơi Tiếp</button>
+            </div>
         </div>
     </div>
 
-    <!-- Cửa Hàng & Nhiệm Vụ -->
-    <div class="panel">
-        <div class="section-title">Chợ Nguyên Liệu & Nâng Cấp</div>
-        <div class="shop-item">
-            <span>Thịt "không rõ nguồn gốc" (x5) - 100 VNĐ</span>
-            <button onclick="buyMaterial(5, 100)">Mua</button>
-        </div>
-        <div class="shop-item">
-            <span>Nâng cấp xe đẩy (Tăng uy tín/giá bán)</span>
-            <button onclick="upgradeCart()">Nâng cấp (500 VNĐ)</button>
+    <!-- MÀN HÌNH GAME CHÍNH (GAME SCREEN) -->
+    <div id="game-screen">
+        <header>
+            <h2>🍢 Bán Xiên Bẩn Trả Nợ 🍢</h2>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">💵 Tiền: <span id="money" style="color:var(--secondary)">500</span> VNĐ</div>
+            <div class="stat-item">💸 Nợ: <span id="debt" style="color:var(--primary)">5000</span> VNĐ</div>
+            <div class="stat-item">🍢 Xiên: <span id="skewers">5</span></div>
+            <div class="stat-item">⏳ Ngày: <span id="day" style="color:var(--warning)">1</span></div>
         </div>
 
-        <div class="section-title">Nhiệm Vụ Hằng Ngày</div>
-        <div class="quest-item" id="questStatus">
-            <span>Bán được 10 xiên bẩn (Thưởng: 300 VNĐ)</span>
+        <div class="game-body">
+            <!-- Hành động -->
+            <div>
+                <div class="section-title">Hành Động Kinh Doanh</div>
+                <div class="action-grid">
+                    <button onclick="makeSkewers()">🥩 Làm xiên bẩn (Tốn 1 nguyên liệu)</button>
+                    <button class="secondary" onclick="sellSkewers()">🛒 Mời khách mua xiên bẩn</button>
+                    <button class="warning" onclick="payDebt()">💸 Trả nợ (1000 VNĐ)</button>
+                </div>
+            </div>
+
+            <!-- Cửa hàng -->
+            <div>
+                <div class="section-title">Chợ Nguyên Liệu & Nâng Cấp</div>
+                <div class="shop-item">
+                    <span>Thịt "bí ẩn" (x5) - 100 VNĐ</span>
+                    <button onclick="buyMaterial(5, 100)">Mua</button>
+                </div>
+                <div class="shop-item">
+                    <span>Nâng cấp xe đẩy (<span id="cartLvlText">Cấp 1</span>)</span>
+                    <button class="secondary" onclick="upgradeCart()">Nâng cấp</button>
+                </div>
+            </div>
+
+            <!-- Nhiệm vụ -->
+            <div>
+                <div class="section-title">Nhiệm Vụ Hằng Ngày</div>
+                <div class="quest-item" id="questStatus">
+                    <span>Đang tải nhiệm vụ...</span>
+                </div>
+            </div>
+
+            <!-- Nhật ký -->
+            <div>
+                <div class="section-title">Nhật Ký Phố Đêm</div>
+                <div class="log-box" id="logBox">
+                    Chào mừng bạn đến với vỉa hè...<br>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lưu code trong game -->
+        <div class="code-game-area">
+            <input type="text" id="saveCodeInput" readonly placeholder="Mã lưu game của bạn sẽ hiện ở đây..." />
+            <div class="code-row">
+                <button class="info" onclick="generateSaveCode()">📋 Tạo Mã Lưu</button>
+                <button class="warning" onclick="backToMenu()">🏠 Về Menu</button>
+            </div>
         </div>
     </div>
 
-    <!-- Khu Vực Lưu / Tải Game Bằng Mã Code -->
-    <div class="code-area">
-        <button class="info" onclick="generateSaveCode()">Tạo Mã Lưu Game</button>
-        <input type="text" id="saveCodeInput" placeholder="Mã lưu game sẽ hiện ở đây hoặc nhập mã cũ vào đây..." />
-        <button class="secondary" onclick="loadGameCode()">Nhập Mã Chơi Tiếp</button>
-    </div>
 </div>
 
 <script>
-    // Trạng thái game
     let game = {
         money: 500,
         debt: 5000,
@@ -189,9 +334,9 @@
         document.getElementById('debt').innerText = game.debt;
         document.getElementById('skewers').innerText = game.skewers;
         document.getElementById('day').innerText = game.day;
+        document.getElementById('cartLvlText').innerText = `Cấp ${game.cartLevel}`;
         
-        // Cập nhật trạng thái nhiệm vụ
-        let qText = game.questCompleted ? "✅ Đã hoàn thành nhiệm vụ hôm nay!" : `Bán xiên (${game.soldToday}/10) - Thưởng 300 VNĐ`;
+        let qText = game.questCompleted ? "✅ Đã hoàn thành nhiệm vụ!" : `Bán xiên (${game.soldToday}/10) - Thưởng 300 VNĐ`;
         document.getElementById('questStatus').querySelector('span').innerText = qText;
     }
 
@@ -201,71 +346,77 @@
         logBox.scrollTop = logBox.scrollHeight;
     }
 
-    // Làm xiên bẩn
+    function startNewGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+        log("Bắt đầu ngày kinh doanh mới trên vỉa hè!");
+        updateUI();
+    }
+
+    function backToMenu() {
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'flex';
+    }
+
     function makeSkewers() {
         if (game.materials > 0) {
             game.materials--;
-            game.skewers += 2; // Làm 1 lần được 2 xiên
-            log(`Bạn đã chế biến thành công 2 xiên bẩn. Còn lại ${game.materials} nguyên liệu.`);
+            game.skewers += 2;
+            log(`Chế biến thành công 2 xiên bẩn. Còn ${game.materials} nguyên liệu.`);
         } else {
             log(`Hết nguyên liệu! Hãy ra chợ mua thêm.`);
         }
         updateUI();
     }
 
-    // Bán xiên bẩn
     function sellSkewers() {
         if (game.skewers > 0) {
             game.skewers--;
-            let earnPrice = 50 * game.cartLevel; // Càng nâng cấp xe đẩy bán càng đắt
+            let earnPrice = 50 * game.cartLevel;
             game.money += earnPrice;
             game.soldToday++;
-            log(`Bán thành công 1 xiên bẩn, thu về ${earnPrice} VNĐ.`);
+            log(`Bán 1 xiên bẩn, thu về ${earnPrice} VNĐ.`);
 
-            // Kiểm tra hoàn thành nhiệm vụ
             if (game.soldToday >= 10 && !game.questCompleted) {
                 game.questCompleted = true;
                 game.money += 300;
-                log(`🎉 Hoàn thành nhiệm vụ ngày! Nhận thưởng 300 VNĐ.`);
+                log(`🎉 Hoàn thành nhiệm vụ ngày! Thưởng 300 VNĐ.`);
             }
             
-            // Sang ngày mới sau mỗi 15 lần bán
             if(game.soldToday % 15 === 0) {
                 game.day++;
                 game.questCompleted = false;
-                log(`🌅 Ngày mới bắt đầu! (Ngày thứ ${game.day})`);
+                log(`🌅 Chào ngày mới! Ngày thứ ${game.day}`);
             }
         } else {
-            log(`Không còn xiên bẩn nào để bán! Hãy làm thêm.`);
+            log(`Hết xiên bẩn để bán! Hãy làm thêm.`);
         }
         updateUI();
     }
 
-    // Mua nguyên liệu
     function buyMaterial(amount, cost) {
         if (game.money >= cost) {
             game.money -= cost;
             game.materials += amount;
-            log(`Đã mua ${amount} nguyên liệu với giá ${cost} VNĐ.`);
+            log(`Đã mua ${amount} nguyên liệu (${cost} VNĐ).`);
         } else {
             log(`Không đủ tiền mua nguyên liệu!`);
         }
         updateUI();
     }
 
-    // Trả nợ
     function payDebt() {
         let payAmount = 1000;
         if (game.money >= payAmount) {
             if (game.debt > 0) {
                 game.money -= payAmount;
                 game.debt = Math.max(0, game.debt - payAmount);
-                log(`Bạn đã trả bớt ${payAmount} VNĐ tiền nợ. Nợ còn lại: ${game.debt} VNĐ.`);
+                log(`Đã trả bớt ${payAmount} VNĐ tiền nợ. Nợ còn: ${game.debt} VNĐ.`);
                 if(game.debt === 0) {
                     alert("CHÚC MỪNG! Bạn đã trả hết nợ và trở thành đại gia xiên bẩn!");
                 }
             } else {
-                log(`Bạn đã trả hết nợ từ lâu rồi!`);
+                log(`Bạn đã trả sạch nợ rồi!`);
             }
         } else {
             log(`Không đủ tiền trả nợ!`);
@@ -273,61 +424,49 @@
         updateUI();
     }
 
-    // Nâng cấp xe đẩy
     function upgradeCart() {
         let cost = 500 * game.cartLevel;
         if (game.money >= cost) {
             game.money -= cost;
             game.cartLevel++;
-            log(`Nâng cấp xe đẩy thành công! Cấp độ hiện tại: ${game.cartLevel}`);
+            log(`Nâng cấp xe đẩy lên cấp ${game.cartLevel}!`);
         } else {
             log(`Cần ${cost} VNĐ để nâng cấp xe đẩy!`);
         }
         updateUI();
     }
 
-    // ================= CHỨC NĂNG LƯU / TẢI BẰNG MÃ CODE =================
-
-    // Tạo mã code lưu game
     function generateSaveCode() {
-        // Chuyển đổi object game thành chuỗi JSON, sau đó mã hóa Base64 để trông giống mã code bảo mật
         let jsonString = JSON.stringify(game);
         let encodedCode = btoa(encodeURIComponent(jsonString));
-        
         document.getElementById('saveCodeInput').value = encodedCode;
-        log(`Đã tạo mã lưu game thành công! Hãy copy lại để dành chơi tiếp nhé.`);
+        log(`Đã tạo mã lưu game thành công!`);
     }
 
-    // Nhập mã code để chơi tiếp
     function loadGameCode() {
-        let inputCode = document.getElementById('saveCodeInput').value.trim();
+        let inputCode = document.getElementById('loadCodeInput').value.trim();
         if (!inputCode) {
-            alert("Vui lòng nhập mã code lưu game vào ô trống!");
+            alert("Vui lòng nhập mã code vào ô trống!");
             return;
         }
 
         try {
-            // Giải mã Base64 ngược lại thành dữ liệu game
             let jsonString = decodeURIComponent(atob(inputCode));
             let loadedData = JSON.parse(jsonString);
 
-            // Kiểm tra xem dữ liệu có hợp lệ không
             if (loadedData && typeof loadedData.money === 'number' && typeof loadedData.debt === 'number') {
                 game = loadedData;
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('game-screen').style.display = 'flex';
                 updateUI();
-                log(`Tải game thành công từ mã code! Chào mừng bạn quay trở lại.`);
-                alert("Tải game thành công!");
+                log(`Tải game thành công từ mã code!`);
             } else {
-                throw new Error("Dữ liệu không hợp lệ");
+                throw new Error("Invalid data");
             }
         } catch (error) {
             alert("Mã code không hợp lệ! Vui lòng kiểm tra lại.");
-            log(`Lỗi: Không thể đọc mã code vừa nhập.`);
         }
     }
-
-    // Khởi chạy giao diện ban đầu
-    updateUI();
 </script>
 
 </body>
