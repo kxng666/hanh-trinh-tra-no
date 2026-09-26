@@ -1,1 +1,687 @@
-.
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bán Xiên Bẩn Trả Nợ - Pixel Edition v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pixel-bg: #14141c;
+            --pixel-panel: #212133;
+            --pixel-border: #4e4e6a;
+            --pixel-primary: #ff3838;
+            --pixel-secondary: #23c552;
+            --pixel-warning: #ffb142;
+            --pixel-info: #3b82f6;
+            --pixel-text: #f1f2f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Press Start 2P', monospace, sans-serif;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: #0b0b10;
+            color: var(--pixel-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--pixel-bg);
+            border: 4px solid #70a1ff;
+            box-shadow: 0 8px 0 #1e3799, inset 0 0 20px rgba(0,0,0,0.8);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 92vh;
+            max-height: 880px;
+        }
+
+        /* MÀN HÌNH CHỜ */
+        #start-screen {
+            padding: 25px 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: radial-gradient(circle, #2d2b55 0%, #14141c 100%);
+        }
+        .game-logo { font-size: 40px; animation: float 2s infinite alternate; text-shadow: 4px 4px 0px #000; }
+        @keyframes float { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+        #start-screen h1 { color: var(--pixel-primary); font-size: 13px; line-height: 1.6; text-shadow: 2px 2px 0px #000; }
+        #start-screen p { color: #a4b0be; font-size: 7px; line-height: 1.8; max-width: 90%; }
+        .menu-box { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+
+        .input-group, .code-input-group {
+            display: flex; flex-direction: column; gap: 8px;
+            background: var(--pixel-panel); padding: 12px; border: 2px solid var(--pixel-border); text-align: left;
+        }
+        
+        input {
+            padding: 10px; border: 2px solid var(--pixel-border); background: #0b0b10;
+            color: var(--pixel-secondary); font-size: 8px; outline: none;
+        }
+        input:focus { border-color: var(--pixel-warning); }
+
+        button {
+            background-color: var(--pixel-primary); color: white; border: none; padding: 12px;
+            font-size: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 0 #b33939;
+            transition: 0.05s; text-transform: uppercase;
+        }
+        button:active { transform: translateY(4px); box-shadow: 0 0 0 #b33939; }
+        button.secondary { background-color: var(--pixel-secondary); box-shadow: 0 4px 0 #1b9cfc; }
+        button.secondary:active { box-shadow: 0 0 0 #1b9cfc; }
+        button.warning { background-color: var(--pixel-warning); color: #000; box-shadow: 0 4px 0 #cc8e35; }
+        button.warning:active { box-shadow: 0 0 0 #cc8e35; }
+        button.info { background-color: var(--pixel-info); box-shadow: 0 4px 0 #2c3e50; }
+        button:disabled { background: #4a4a6a !important; color: #888 !important; box-shadow: none !important; cursor: not-allowed; }
+
+        /* MÀN HÌNH GAME CHÍNH */
+        #game-screen { display: none; flex-direction: column; height: 100%; }
+        header { background: #191924; padding: 10px; text-align: center; border-bottom: 3px solid var(--pixel-border); }
+        header h2 { font-size: 9px; color: var(--pixel-primary); text-shadow: 1px 1px #000; }
+        .shop-name-display { font-size: 7px; color: var(--pixel-warning); margin-top: 4px; }
+
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;
+            background: #0f0f17; padding: 8px; font-size: 7px; border-bottom: 3px solid var(--pixel-border);
+        }
+        .stat-item { display: flex; align-items: center; gap: 4px; }
+
+        .tabs {
+            display: flex; background: #0f0f17; border-bottom: 3px solid var(--pixel-border); flex-wrap: wrap;
+        }
+        .tab-btn {
+            flex: 1; min-width: 25%; padding: 8px 2px; background: #191924; border: none;
+            border-right: 2px solid var(--pixel-border); color: #888; font-size: 6px; cursor: pointer; text-align: center; box-shadow: none;
+        }
+        .tab-btn.active { color: var(--pixel-warning); background: var(--pixel-panel); border-bottom: 3px solid var(--pixel-warning); }
+
+        .tab-content { display: none; flex: 1; overflow-y: auto; padding: 10px; flex-direction: column; gap: 8px; }
+        .tab-content.active { display: flex; }
+
+        .section-title {
+            font-size: 7px; color: var(--pixel-warning); background: #191924;
+            padding: 5px; border-left: 4px solid var(--pixel-warning); margin-bottom: 4px;
+        }
+
+        .customer-card {
+            background: var(--pixel-panel); border: 3px dashed var(--pixel-warning); padding: 10px; text-align: center;
+        }
+        .customer-feedback {
+            margin-top: 6px; padding: 6px; font-size: 7px; border: 2px solid var(--pixel-border); background: #0b0b10; min-height: 28px;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+
+        .item-row, .shop-item, .quest-item, .rank-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--pixel-panel); padding: 7px; border: 2px solid var(--pixel-border); font-size: 6px; margin-bottom: 4px;
+        }
+        .item-row button, .shop-item button { padding: 5px 6px; font-size: 6px; }
+
+        /* POPUP CHIẾN THẮNG TRẢ NỢ */
+        #win-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999; justify-content: center; align-items: center; padding: 20px;
+        }
+        .win-box {
+            background: var(--pixel-panel); border: 4px solid var(--pixel-warning); padding: 20px;
+            text-align: center; display: flex; flex-direction: column; gap: 12px; max-width: 360px;
+        }
+        .win-box h3 { color: var(--pixel-warning); font-size: 11px; }
+        .win-box p { font-size: 7px; line-height: 1.6; color: #a4b0be; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- MÀN HÌNH MỞ ĐẦU -->
+    <div id="start-screen">
+        <div class="game-logo">🍢🔥</div>
+        <h1>BÁN XIÊN BẨN TRẢ NỢ<br><span style="font-size:8px; color:var(--pixel-secondary)">ULTIMATE PIXEL EDITION</span></h1>
+        <p>Làm chủ tiệm vỉa hè đêm, chế biến đủ món xiên bẩn hấp dẫn, làm nhiệm vụ và trả sạch khoản nợ khổng lồ!</p>
+        
+        <div class="menu-box">
+            <div class="input-group">
+                <span style="font-size: 7px; color: var(--pixel-warning);">ĐẶT TÊN TIỆM XIÊN BẨN:</span>
+                <input type="text" id="inputShopName" placeholder="VD: Xiên Đêm Phố Cổ..." />
+            </div>
+            <button class="secondary" onclick="startNewGame()" style="font-size: 9px; padding: 12px;">▶ BẮT ĐẦU CHƠI</button>
+            
+            <div class="code-input-group">
+                <span style="font-size: 7px; color: #a4b0be;">HOẶC NHẬP MÃ LƯU CŨ:</span>
+                <input type="text" id="loadCodeInput" placeholder="Dán mã code vào đây..." />
+                <button class="info" onclick="loadGameCode()">📥 TIẾP TỤC CHƠI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH GAME CHÍNH -->
+    <div id="game-screen">
+        <header>
+            <h2 id="headerTitle">🍢 BÁN XIÊN BẨN TRẢ NỢ 🍢</h2>
+            <div class="shop-name-display" id="displayShopName">TIỆM CHƯA ĐẶT TÊN</div>
+        </header>
+
+        <!-- THANH CHỈ SỐ -->
+        <div class="stats-bar">
+            <div class="stat-item">💵 TIỀN: <span id="money" style="color:var(--pixel-secondary)">600</span>đ</div>
+            <div class="stat-item">💸 NỢ: <span id="debt" style="color:var(--pixel-primary)">20000</span>đ</div>
+            <div class="stat-item">⭐ UY TÍN: <span id="reputation" style="color:var(--pixel-warning)">20</span></div>
+            <div class="stat-item">🏆 CẤP: <span id="shopLevel" style="color:var(--pixel-info)">1</span> (XP:<span id="exp">0</span>/<span id="maxExp">100</span>)</div>
+        </div>
+
+        <!-- TABS ĐIỀU HƯỚNG -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-kitchen', this)">🍳 QUẦY</button>
+            <button class="tab-btn" onclick="switchTab('tab-shop', this)">🛒 CHỢ & NỢ</button>
+            <button class="tab-btn" onclick="switchTab('tab-quests', this)">📜 NHIỆM VỤ</button>
+            <button class="tab-btn" onclick="switchTab('tab-rank', this)">🏆 TOP</button>
+            <button class="tab-btn" onclick="switchTab('tab-settings', this)">⚙️ CÀI ĐẶT</button>
+        </div>
+
+        <!-- TAB 1: QUẦY & BÁN HÀNG & CHẾ BIẾN -->
+        <div id="tab-kitchen" class="tab-content active">
+            <div class="customer-card">
+                <div style="font-weight: bold; color: var(--pixel-warning); margin-bottom: 4px;" id="custName">👤 KHÁCH ĐANG ĐẾN...</div>
+                <div style="font-size: 6px; font-style: italic; margin-bottom: 6px;" id="custRequest">"Đợi thực khách gọi món..."</div>
+                <div id="custActionArea" style="margin-bottom: 6px;">
+                    <button class="secondary" id="serveBtn" onclick="serveCustomer()" disabled style="width: 100%;">PHỤC VỤ MÓN</button>
+                </div>
+                <div class="customer-feedback" id="custFeedback">Trạng thái phục vụ: Chưa có khách ăn.</div>
+            </div>
+
+            <div>
+                <div class="section-title">KHO NGUYÊN LIỆU THÔ</div>
+                <div class="item-row">
+                    <span>🥩 THỊT THÔ (KHO: <span id="matMeat">10</span>)</span>
+                    <span style="color:#a4b0be">Dùng cho xiên nướng</span>
+                </div>
+                <div class="item-row">
+                    <span>🦐 HẢI SẢN/VIÊN (KHO: <span id="matSeafood">8</span>)</span>
+                    <span style="color:#a4b0be">Dùng cho xiên chiên</span>
+                </div>
+                <div class="item-row">
+                    <span>🥚 BỘT & TRỨNG CÚT (KHO: <span id="matExtra">6</span>)</span>
+                    <span style="color:#a4b0be">Dùng cho món đặc sản</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title">CHỌN MÓN ĐỂ CHẾ BIẾN</div>
+                <div id="craftListContainer"></div>
+            </div>
+
+            <div>
+                <div class="section-title">KHO MÓN ĂN SẴN SÀNG PHỤC VỤ</div>
+                <div id="foodListContainer"></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: CHỢ & TÀI CHÍNH -->
+        <div id="tab-shop" class="tab-content">
+            <div class="section-title">CHỢ MUA NGUYÊN LIỆU THÔ</div>
+            <div class="shop-item">
+                <span>THỊT THÔ (X5) - 70đ</span>
+                <button onclick="buyMaterial('meat', 5, 70)">MUA</button>
+            </div>
+            <div class="shop-item">
+                <span>HẢI SẢN THÔ (X5) - 90đ</span>
+                <button onclick="buyMaterial('seafood', 5, 90)">MUA</button>
+            </div>
+            <div class="shop-item">
+                <span>BỘT & TRỨNG (X5) - 120đ</span>
+                <button onclick="buyMaterial('extra', 5, 120)">MUA</button>
+            </div>
+
+            <div class="section-title" style="margin-top: 4px;">MỞ KHÓA MÓN ĂN MỚI (DỰA VÀO UY TÍN)</div>
+            <div id="unlockShopContainer"></div>
+
+            <div class="section-title" style="margin-top: 4px;">TÀI CHÍNH VÀ TRẢ NỢ</div>
+            <div class="shop-item">
+                <span>TRẢ NỢ XÃ HỘI ĐEN (2,000đ)</span>
+                <button class="warning" onclick="payDebt()">TRẢ NỢ</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: NHIỆM VỤ CHÍNH TUYẾN TUẦN TỰ -->
+        <div id="tab-quests" class="tab-content">
+            <div class="section-title">NHIỆM VỤ CHÍNH TUYẾN (TUẦN TỰ)</div>
+            <div id="mainQuestContainer"></div>
+
+            <div class="section-title" style="margin-top: 6px;">NHIỆM VỤ HẰNG NGÀY</div>
+            <div class="quest-item" id="dailyQuestContainer">
+                <span>Đang tải...</span>
+            </div>
+        </div>
+
+        <!-- TAB 4: BẢNG XẾP HẠNG -->
+        <div id="tab-rank" class="tab-content">
+            <div class="section-title">BẢNG XẾP HẠNG THÀNH PHỐ</div>
+            <div id="leaderboardList"></div>
+        </div>
+
+        <!-- TAB 5: CÀI ĐẶT & LƯU GAME -->
+        <div id="tab-settings" class="tab-content">
+            <div class="section-title">QUẢN LÝ DỮ LIỆU & CÀI ĐẶT</div>
+            <div class="code-game-area" style="background: var(--pixel-panel); padding: 10px; border: 2px solid var(--pixel-border); display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 7px; color: var(--pixel-warning);">MÃ LƯU GAME (SAVE CODE):</span>
+                <input type="text" id="saveCodeInput" readonly placeholder="Bấm nút tạo mã để lấy code..." />
+                <button class="info" onclick="generateSaveCode()">📋 TẠO MÃ LƯU GAME</button>
+            </div>
+            <div style="margin-top: 15px;">
+                <button class="warning" onclick="backToMenu()" style="width: 100%; padding: 12px;">🏠 THOÁT VỀ MENU CHÍNH</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- POPUP THẮNG GAME KHI TRẢ HẾT NỢ -->
+<div id="win-modal">
+    <div class="win-box">
+        <h3>🎉 CHÚC MỪNG ĐẠI GIA! 🎉</h3>
+        <p>Bạn đã trả sạch toàn bộ khoản nợ 20,000đ cho xã hội đen! Tiệm xiên bẩn của bạn đã chính thức bước lên huyền thoại phố đêm.</p>
+        <p style="color: var(--pixel-secondary)">Bạn có thể tiếp tục chơi để mở rộng tiệm hoặc cày cấp độ tối đa!</p>
+        <button class="secondary" onclick="closeWinModal()">TIẾP TỤC TRẢI NGHIỆM</button>
+    </div>
+</div>
+
+<script>
+    const FOOD_DB = {
+        meatSkewers: { name: "Xiên Thịt Nướng", mat: "meat", req: 1, price: 50, unlocked: true, minRep: 0, exp: 15 },
+        spicyBalls: { name: "Đồ Viên Sốt Cay", mat: "meat", req: 2, price: 120, unlocked: false, minRep: 20, exp: 30 },
+        grilledSquid: { name: "Bạch Tuộc Mini", mat: "seafood", req: 2, price: 160, unlocked: false, minRep: 40, exp: 45 },
+        shrimpRoll: { name: "Chả Giò Hải Sản", mat: "seafood", req: 3, price: 240, unlocked: false, minRep: 70, exp: 65 },
+        quailEggs: { name: "Trứng Cút Nướng Mỡ", mat: "extra", req: 2, price: 200, unlocked: false, minRep: 100, exp: 60 },
+        crispyPotato: { name: "Khoai Tây Lắc Phô Mai", mat: "extra", req: 3, price: 320, unlocked: false, minRep: 130, exp: 90 },
+        specialCombo: { name: "Combo Siêu Bẩn Vỉa Hè", mat: "seafood", req: 4, price: 450, unlocked: false, minRep: 170, exp: 130 }
+    };
+
+    const MAIN_QUESTS = [
+        { id: 1, title: "Bước Khởi Đầu", desc: "Đạt cấp độ 2 hoặc sở hữu 1,000đ.", check: () => game.level >= 2 || game.money >= 1000, reward: "Thưởng 300đ & +5 Uy Tín", claim: () => { game.money += 300; game.reputation += 5; } },
+        { id: 2, title: "Đầu Bếp Triển Vọng", desc: "Mở khóa món 'Đồ Viên Sốt Cay' và tích lũy 35 Uy Tín.", check: () => game.unlocked.spicyBalls && game.reputation >= 35, reward: "Thưởng 600đ", claim: () => { game.money += 600; } },
+        { id: 3, title: "Mở Rộng Thực Đơn", desc: "Đạt Cấp độ 4 và chế biến tổng cộng 15 món ăn bất kỳ.", check: () => game.level >= 4 && game.totalCrafted >= 15, reward: "Thưởng 1,200đ & +10 Uy Tín", claim: () => { game.money += 1200; game.reputation += 10; } },
+        { id: 4, title: "Bậc Thầy Xiên Bẩn", desc: "Đạt 100 điểm Uy Tín và mở khóa món 'Trứng Cút Nướng Mỡ'.", check: () => game.reputation >= 100 && game.unlocked.quailEggs, reward: "Thưởng 3,000đ", claim: () => { game.money += 3000; } },
+        { id: 5, title: "Huyền Thoại Phố Đêm", desc: "Trả hoàn toàn số nợ 20,000đ cho xã hội đen.", check: () => game.debt === 0, reward: "Danh hiệu Đại Gia Xiên Bẩn", claim: () => { game.reputation += 30; } }
+    ];
+
+    const NPC_NAMES = ["Học Sinh Cấp 3", "Anh Xe Ôm Công Nghệ", "Chị Hàng Xóm", "Thanh Niên Xăm Trổ", "Khách Du Lịch Bụi", "Cán Bộ Phường Ẩn Danh", "Sinh Viên Đại Học"];
+    const CUSTOMER_PHRASES = [
+        "Đói bụng quá! Cho 1 phần {food} nhanh nhé chủ quán!",
+        "Làm cho tôi 1 cây {food} thật nhiều tương ớt nha!",
+        "Nghe nói quán này xiên bẩn đỉnh lắm, lấy 1 phần {food}!",
+        "Cho mình một {food} vừa đi đường vừa nhai cho ấm bụng!"
+    ];
+
+    const LEADERBOARD_BOTS = [
+        { name: "Xiên Bẩn Đại Cồ Việt", level: 14 },
+        { name: "Vỉa Hè Chị Hai", level: 11 },
+        { name: "Bếp Đêm Của Tuấn", level: 8 },
+        { name: "Xiên Sạch 99%", level: 5 },
+        { name: "Góc Phố Ăn Vặt", level: 3 }
+    ];
+
+    let game = {
+        shopName: "Tiệm Xiên Bẩn Pixel",
+        money: 600,
+        debt: 20000,
+        reputation: 20,
+        level: 1,
+        exp: 0,
+        maxExp: 100,
+        materials: { meat: 10, seafood: 8, extra: 6 },
+        foods: { meatSkewers: 3, spicyBalls: 0, grilledSquid: 0, shrimpRoll: 0, quailEggs: 0, crispyPotato: 0, specialCombo: 0 },
+        unlocked: { meatSkewers: true, spicyBalls: false, grilledSquid: false, shrimpRoll: false, quailEggs: false, crispyPotato: false, specialCombo: false },
+        currentQuestIndex: 0,
+        questClaimed: [false, false, false, false, false],
+        totalCrafted: 0,
+        dailySold: 0,
+        dailyTarget: 8,
+        dailyCompleted: false,
+        hasWon: false
+    };
+
+    let currentCustomer = null;
+    let customerTimer = null;
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+        if(tabId === 'tab-rank') renderLeaderboard();
+        if(tabId === 'tab-shop') renderUnlockShop();
+        if(tabId === 'tab-quests') renderQuests();
+    }
+
+    function startNewGame() {
+        let nameInput = document.getElementById('inputShopName').value.trim();
+        if(!nameInput) { alert("Vui lòng đặt tên cho tiệm xiên bẩn của bạn!"); return; }
+        game.shopName = nameInput;
+        document.getElementById('displayShopName').innerText = game.shopName;
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+        
+        updateUI();
+        startCustomerSpawner();
+    }
+
+    function updateUI() {
+        document.getElementById('money').innerText = game.money;
+        document.getElementById('debt').innerText = game.debt;
+        document.getElementById('reputation').innerText = game.reputation;
+        document.getElementById('shopLevel').innerText = game.level;
+        document.getElementById('exp').innerText = game.exp;
+        document.getElementById('maxExp').innerText = game.maxExp;
+
+        document.getElementById('matMeat').innerText = game.materials.meat;
+        document.getElementById('matSeafood').innerText = game.materials.seafood;
+        document.getElementById('matExtra').innerText = game.materials.extra;
+
+        renderFoodList();
+        renderCraftList();
+    }
+
+    function renderCraftList() {
+        let container = document.getElementById('craftListContainer');
+        container.innerHTML = '';
+        for (let key in FOOD_DB) {
+            if (!game.unlocked[key]) continue;
+            let item = FOOD_DB[key];
+            container.innerHTML += `
+                <div class="item-row">
+                    <span>${item.name} (${item.req} NL)</span>
+                    <button class="warning" onclick="craftSpecificItem('${key}')">CHẾ BIẾN</button>
+                </div>
+            `;
+        }
+    }
+
+    function craftSpecificItem(key) {
+        let item = FOOD_DB[key];
+        if(game.materials[item.mat] >= item.req) {
+            game.materials[item.mat] -= item.req;
+            game.foods[key]++;
+            game.totalCrafted++;
+            updateUI();
+            if(currentCustomer) checkServeAvailability();
+        } else {
+            alert(`Không đủ nguyên liệu thô (${item.mat.toUpperCase()}) để chế biến món này!`);
+        }
+    }
+
+    function renderFoodList() {
+        let container = document.getElementById('foodListContainer');
+        container.innerHTML = '';
+        for (let key in FOOD_DB) {
+            if (!game.unlocked[key]) continue;
+            let item = FOOD_DB[key];
+            container.innerHTML += `
+                <div class="item-row">
+                    <span>${item.name}: <b>${game.foods[key]}</b> cái</span>
+                    <span style="color:var(--pixel-secondary)">Giá bán: ${item.price}đ</span>
+                </div>
+            `;
+        }
+    }
+
+    function buyMaterial(type, amount, cost) {
+        if(game.money >= cost) {
+            game.money -= cost;
+            game.materials[type] += amount;
+            updateUI();
+        } else {
+            alert("Không đủ tiền mua nguyên liệu!");
+        }
+    }
+
+    function startCustomerSpawner() {
+        if(customerTimer) clearInterval(customerTimer);
+        customerTimer = setInterval(() => {
+            if(!currentCustomer) { generateCustomer(); }
+        }, 5000);
+    }
+
+    function generateCustomer() {
+        let unlockedKeys = Object.keys(FOOD_DB).filter(k => game.unlocked[k]);
+        let randomFoodKey = unlockedKeys[Math.floor(Math.random() * unlockedKeys.length)];
+        
+        currentCustomer = {
+            name: NPC_NAMES[Math.floor(Math.random() * NPC_NAMES.length)],
+            wantFood: randomFoodKey,
+            phrase: CUSTOMER_PHRASES[Math.floor(Math.random() * CUSTOMER_PHRASES.length)].replace("{food}", FOOD_DB[randomFoodKey].name)
+        };
+
+        document.getElementById('custName').innerText = `👤 ${currentCustomer.name}`;
+        document.getElementById('custRequest').innerText = `"${currentCustomer.phrase}"`;
+        checkServeAvailability();
+    }
+
+    function checkServeAvailability() {
+        if(!currentCustomer) return;
+        let btn = document.getElementById('serveBtn');
+        let foodKey = currentCustomer.wantFood;
+        if(game.foods[foodKey] > 0) {
+            btn.disabled = false;
+            btn.innerText = `PHỤC VỤ ${FOOD_DB[foodKey].name} (${game.foods[foodKey]})`;
+        } else {
+            btn.disabled = true;
+            btn.innerText = `THIẾU ${FOOD_DB[foodKey].name}`;
+        }
+    }
+
+    function serveCustomer() {
+        if(!currentCustomer) return;
+        let foodKey = currentCustomer.wantFood;
+        if(game.foods[foodKey] <= 0) return;
+
+        game.foods[foodKey]--;
+        let rand = Math.random();
+        let foodItem = FOOD_DB[foodKey];
+        let feedbackBox = document.getElementById('custFeedback');
+
+        if(rand < 0.12 && game.reputation > 5) {
+            // Quỵt tiền
+            feedbackBox.innerHTML = `<span style="color:var(--pixel-primary)">😡 ${currentCustomer.name} ăn xong quỵt tiền chạy mất! (-3 Uy Tín)</span>`;
+            game.reputation = Math.max(0, game.reputation - 3);
+        } else if(rand < 0.28) {
+            // Không hài lòng
+            let subRep = Math.floor(Math.random() * 3) + 1; // Random trừ 1 đến 3
+            feedbackBox.innerHTML = `<span style="color:var(--pixel-warning)">⚠️ ${currentCustomer.name} chê không ngon! (-${subRep} Uy Tín)</span>`;
+            game.reputation = Math.max(0, game.reputation - subRep);
+        } else {
+            // Hài lòng
+            let tip = foodItem.price;
+            let addRep = Math.floor(Math.random() * 3) + 1; // Random cộng 1 đến 3 điểm uy tín
+            game.money += tip;
+            game.reputation += addRep;
+            game.exp += foodItem.exp;
+
+            feedbackBox.innerHTML = `<span style="color:var(--pixel-secondary)">😊 ${currentCustomer.name} rất hài lòng! Nhận +${tip}đ, +${addRep} Uy Tín, +${foodItem.exp} XP</span>`;
+
+            game.quests.dailySold++;
+            if(game.quests.dailySold >= game.quests.dailyTarget && !game.quests.dailyCompleted) {
+                game.quests.dailyCompleted = true;
+                game.money += 400;
+            }
+
+            if(game.exp >= game.maxExp) {
+                game.level++;
+                game.exp = 0;
+                game.maxExp += 60;
+            }
+        }
+
+        currentCustomer = null;
+        document.getElementById('custName').innerText = "👤 ĐANG ĐỢI KHÁCH...";
+        document.getElementById('custRequest').innerText = `"Phố đêm tấp nập..."`;
+        document.getElementById('serveBtn').disabled = true;
+        document.getElementById('serveBtn').innerText = "PHỤC VỤ MÓN";
+
+        updateUI();
+        renderQuests();
+    }
+
+    function renderUnlockShop() {
+        let container = document.getElementById('unlockShopContainer');
+        container.innerHTML = '';
+        for(let key in FOOD_DB) {
+            let item = FOOD_DB[key];
+            if(game.unlocked[key]) {
+                container.innerHTML += `<div class="shop-item"><span>${item.name}</span><span style="color:var(--pixel-secondary)">ĐÃ MỞ ✅</span></div>`;
+            } else {
+                let canUnlock = game.reputation >= item.minRep;
+                container.innerHTML += `
+                    <div class="shop-item">
+                        <span>${item.name} (Cần ${item.minRep} Uy Tín)</span>
+                        <button class="${canUnlock ? 'secondary' : ''}" ${canUnlock ? '' : 'disabled'} onclick="unlockFood('${key}')">MỞ KHÓA</button>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function unlockFood(key) {
+        let item = FOOD_DB[key];
+        if(game.reputation >= item.minRep && !game.unlocked[key]) {
+            game.unlocked[key] = true;
+            renderUnlockShop();
+            updateUI();
+        }
+    }
+
+    function renderQuests() {
+        let container = document.getElementById('mainQuestContainer');
+        container.innerHTML = '';
+
+        MAIN_QUESTS.forEach((q, idx) => {
+            if(idx > game.currentQuestIndex) return; // Chỉ hiển thị tuần tự tới nhiệm vụ hiện tại
+
+            let isCompleted = q.check();
+            let isClaimed = game.questClaimed[idx];
+
+            let btnHtml = '';
+            if(!isClaimed) {
+                btnHtml = `<button class="${isCompleted ? 'secondary' : ''}" ${isCompleted ? '' : 'disabled'} onclick="claimQuest(${idx})">${isCompleted ? 'NHẬN THƯỞNG' : 'CHƯA XONG'}</button>`;
+            } else {
+                btnHtml = `<span style="color:var(--pixel-secondary)">ĐÃ NHẬN ✅</span>`;
+            }
+
+            container.innerHTML += `
+                <div class="quest-item" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                    <div><b>#${idx+1}. ${q.title}</b></div>
+                    <div style="color: #a4b0be">${q.desc}</div>
+                    <div style="color: var(--pixel-warning)">Phần thưởng: ${q.reward}</div>
+                    <div style="width: 100%; text-align: right;">${btnHtml}</div>
+                </div>
+            `;
+        });
+
+        let d = game.quests;
+        let dText = d.dailyCompleted ? "✅ Đã hoàn thành nhiệm vụ ngày!" : `Bán thành công (${d.dailySold}/${d.dailyTarget}) món - Thưởng 400đ`;
+        document.getElementById('dailyQuestContainer').innerHTML = `<span>${dText}</span>`;
+    }
+
+    function claimQuest(idx) {
+        if(game.questClaimed[idx]) return;
+        MAIN_QUESTS[idx].claim();
+        game.questClaimed[idx] = true;
+        if(idx === game.currentQuestIndex && game.currentQuestIndex < MAIN_QUESTS.length - 1) {
+            game.currentQuestIndex++;
+        }
+        updateUI();
+        renderQuests();
+    }
+
+    function renderLeaderboard() {
+        let list = document.getElementById('leaderboardList');
+        let allRanks = [...LEADERBOARD_BOTS, { name: game.shopName + " (Bạn)", level: game.level }];
+        allRanks.sort((a, b) => b.level - a.level);
+
+        list.innerHTML = '';
+        allRanks.forEach((r, idx) => {
+            let isUser = r.name.includes("(Bạn)");
+            list.innerHTML += `
+                <div class="rank-item" style="${isUser ? 'border-color: var(--pixel-warning); background: #26263b;' : ''}">
+                    <span><b>#${idx + 1}</b> ${r.name}</span>
+                    <span style="color: var(--pixel-warning)">Cấp ${r.level}</span>
+                </div>
+            `;
+        });
+    }
+
+    function payDebt() {
+        let amount = 2000;
+        if(game.money >= amount) {
+            if(game.debt > 0) {
+                game.money -= amount;
+                game.debt = Math.max(0, game.debt - amount);
+                updateUI();
+                renderQuests();
+
+                if(game.debt === 0 && !game.hasWon) {
+                    game.hasWon = true;
+                    document.getElementById('win-modal').style.display = 'flex';
+                }
+            } else {
+                alert("Bạn đã trả sạch nợ hoàn toàn rồi!");
+            }
+        } else {
+            alert("Không đủ 2,000đ để trả nợ!");
+        }
+    }
+
+    function closeWinModal() {
+        document.getElementById('win-modal').style.display = 'none';
+    }
+
+    function generateSaveCode() {
+        let code = btoa(encodeURIComponent(JSON.stringify(game)));
+        document.getElementById('saveCodeInput').value = code;
+    }
+
+    function loadGameCode() {
+        let code = document.getElementById('loadCodeInput').value.trim();
+        if(!code) { alert("Vui lòng nhập mã code!"); return; }
+        try {
+            let data = JSON.parse(decodeURIComponent(atob(code)));
+            if(data && data.shopName) {
+                game = data;
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('game-screen').style.display = 'flex';
+                document.getElementById('displayShopName').innerText = game.shopName;
+                updateUI();
+                startCustomerSpawner();
+            } else { throw new Error(); }
+        } catch(e) {
+            alert("Mã code không hợp lệ!");
+        }
+    }
+
+    function backToMenu() {
+        if(customerTimer) clearInterval(customerTimer);
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
